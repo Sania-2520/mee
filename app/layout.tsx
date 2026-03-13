@@ -27,14 +27,11 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark">
       <body className={`${inter.variable} ${spaceGrotesk.variable} antialiased font-sans overflow-hidden bg-background text-foreground`}>
-        <div className="flex h-screen w-full">
+        <div className="flex h-screen w-full bg-[#0f172a]">
           <Sidebar />
-          <div className="flex flex-1 flex-col overflow-hidden">
-            <Navbar />
-            <main className="flex-1 overflow-y-auto bg-background/95 p-4 md:p-8">
-              {children}
-            </main>
-          </div>
+          <main className="flex-1 overflow-y-auto p-4 md:p-8">
+            {children}
+          </main>
         </div>
       </body>
     </html>
