@@ -109,6 +109,17 @@ export function AIInsightsPanel() {
               ))}
             </div>
           </section>
+
+          {/* Meeting Productivity Score */}
+          <section className="pt-4 border-t border-[#1e293b]">
+            <h3 className="text-[11px] font-bold text-[#94a3b8] uppercase tracking-wider mb-3 flex items-center">
+              Meeting Productivity Score
+            </h3>
+            <div className="flex items-end gap-3">
+              <span className="text-4xl font-bold font-heading text-[#22d3ee]">82%</span>
+              <Badge className="bg-emerald-500/10 text-emerald-500 border-none mb-1">+5% from avg</Badge>
+            </div>
+          </section>
         </CardContent>
       </ScrollArea>
     </Card>

@@ -90,6 +90,12 @@ export function Sidebar() {
                         ? 'bg-[#6366f1]/10 text-[#6366f1]' 
                         : 'text-[#94a3b8] hover:bg-[#1e293b] hover:text-[#e2e8f0]'
                     )}
+                    onClick={() => {
+                      if (item.name === 'Task Automation') {
+                        // Dispatch custom event to be caught by DashboardContainer
+                        window.dispatchEvent(new CustomEvent('open-task-window'));
+                      }
+                    }}
                   >
                     <item.icon
                       className={cn(

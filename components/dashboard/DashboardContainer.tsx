@@ -6,11 +6,13 @@ import { AIInsightsPanel } from './AIInsightsPanel';
 import { TranscriptPanel } from './TranscriptPanel';
 import { PersonalNotesPanel } from './PersonalNotesPanel';
 import { TimelinePanel } from './TimelinePanel';
+import { TaskManagementWindow } from './TaskManagementWindow';
 import { FloatingChatbot } from '../chatbot/FloatingChatbot';
-import { motion } from 'framer-motion';
+import { motion, Variants } from 'framer-motion';
+import { useState, useEffect } from 'react';
 
 export function DashboardContainer() {
-  const containerVariants = {
+  const containerVariants: Variants = {
     hidden: { opacity: 0 },
     show: {
       opacity: 1,
@@ -20,10 +22,18 @@ export function DashboardContainer() {
     }
   };
 
-  const itemVariants = {
+  const itemVariants: Variants = {
     hidden: { y: 20, opacity: 0 },
     show: { y: 0, opacity: 1, transition: { type: "spring", stiffness: 100 } }
   };
+
+  const [isTaskWindowOpen, setIsTaskWindowOpen] = useState(false);
+
+  useEffect(() => {
+    const handleOpenTaskWindow = () => setIsTaskWindowOpen(true);
+    window.addEventListener('open-task-window', handleOpenTaskWindow);
+    return () => window.removeEventListener('open-task-window', handleOpenTaskWindow);
+  }, []);
 
   return (
     <div className="max-w-[1600px] mx-auto pb-12">
@@ -62,6 +72,10 @@ export function DashboardContainer() {
       </motion.div>
 
       <FloatingChatbot />
+      
+      {/* Hidden button for Sidebar to trigger (temporary hack to avoid refactoring Sidebar props if it's deeply nested, but realistically we should just use a global state or pass it down via context. 
+          Given the current structure, we'll export a custom event). */}
+      <TaskManagementWindow isOpen={isTaskWindowOpen} onClose={() => setIsTaskWindowOpen(false)} />
     </div>
   );
 }

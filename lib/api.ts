@@ -141,37 +141,54 @@ export const mockChatHistory: ChatMessage[] = [
   { id: 'c2', role: 'assistant', content: "In yesterday's Weekly Engineering Sync, the main decision discussed was \"Switch to new CI Runner\" (migrating to GitHub Actions). However, this currently has a \"Conflict detected\" status that needs resolution.", timestamp: '10:00 AM' },
 ];
 
-// Helper to simulate network delay
-const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/v1';
+
+async function handleResponse(response: Response) {
+  if (!response.ok) {
+    const error = await response.json().catch(() => ({}));
+    throw new Error(error.detail || 'API request failed');
+  }
+  return response.json();
+}
 
 // API Functions
 export const api = {
   getMeetings: async (): Promise<Meeting[]> => {
-    await delay(500);
-    return mockMeetings;
+    const response = await fetch(`${API_BASE_URL}/meetings/`);
+    return handleResponse(response);
   },
   getMeeting: async (id: string): Promise<Meeting | undefined> => {
-    await delay(300);
-    return mockMeetings.find(m => m.id === id);
+    const response = await fetch(`${API_BASE_URL}/meetings/${id}`);
+    return handleResponse(response);
   },
   getTasks: async (): Promise<Task[]> => {
-    await delay(400);
-    return mockTasks;
+    const response = await fetch(`${API_BASE_URL}/tasks/`);
+    return handleResponse(response);
   },
   getDecisions: async (): Promise<Decision[]> => {
-    await delay(400);
-    return mockDecisions;
+    // Backend uses /timeline for decisions/events
+    const response = await fetch(`${API_BASE_URL}/timeline/`);
+    return handleResponse(response);
   },
   getTranscript: async (meetingId: string): Promise<TranscriptLine[]> => {
-    await delay(300);
-    return mockTranscript; // Mock returns same transcript for all
+    // In this backend, transcript is a property of the meeting or returned by meetings endpoints
+    // However, keeping the specific fetch if needed, though usually it's in getMeeting
+    const response = await fetch(`${API_BASE_URL}/meetings/${meetingId}`);
+    const data = await handleResponse(response);
+    // Transform string transcript to TranscriptLine[] if necessary, or just return as is if types match
+    return data.transcript_lines || []; 
   },
-  sendChatMessage: async (message: string): Promise<ChatMessage> => {
-    await delay(1000); // Simulate AI thinking
+  sendChatMessage: async (message: string, meetingId: string = "all"): Promise<ChatMessage> => {
+    const response = await fetch(`${API_BASE_URL}/chat/${meetingId}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ query: message }),
+    });
+    const data = await handleResponse(response);
     return {
       id: Math.random().toString(36).substring(7),
       role: 'assistant',
-      content: 'This is a simulated AI response based on your meeting data. (Mocked response)',
+      content: data.text,
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
     };
   }
