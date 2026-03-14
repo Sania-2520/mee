@@ -1,5 +1,7 @@
+
 import type { Metadata } from 'next';
 import { Inter, Space_Grotesk } from 'next/font/google';
+import Script from "next/script";
 import './globals.css';
 import { Sidebar } from '@/components/layout/Sidebar';
 import { Navbar } from '@/components/layout/Navbar';
@@ -21,18 +23,29 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
     <html lang="en" className="dark">
+
       <body className={`${inter.variable} ${spaceGrotesk.variable} antialiased font-sans overflow-hidden bg-background text-foreground`}>
+
+        {/* ⭐ Jitsi Script */}
+        <Script
+          src="https://meet.jit.si/external_api.js"
+          strategy="beforeInteractive"
+        />
+
         <div className="flex h-screen w-full bg-[#0f172a]">
           <Sidebar />
+
           <main className="flex-1 overflow-y-auto p-4 md:p-8">
             {children}
           </main>
+
         </div>
+
       </body>
     </html>
   );

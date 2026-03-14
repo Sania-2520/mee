@@ -16,6 +16,7 @@ export function Navbar() {
           />
         </div>
       </div>
+      
       <div className="ml-4 flex items-center md:ml-6">
         <Button variant="ghost" size="icon" className="relative text-muted-foreground hover:text-foreground">
           <Bell className="h-5 w-5" />

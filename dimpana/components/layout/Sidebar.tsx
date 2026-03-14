@@ -28,7 +28,7 @@ const navigationGroups = [
     items: [
       { name: 'Live Meeting', href: '/live', icon: Radio },
       { name: 'Meetings History', href: '/meetings', icon: History },
-      { name: 'Transcripts', href: '/transcripts', icon: FileText },
+{ name: 'Transcripts', href: '/transcripts', icon: FileText },
     ]
   },
   {
